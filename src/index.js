@@ -24,13 +24,27 @@ const fs = require('fs');
 
 // Package.json
 const pkgdata = require('../package.json');
-const Database = require('better-sqlite3/lib/database');
+const { Database } = require('bun:sqlite');
 
 const instances = [];
 
 process.on('exit', () => {
   for (const instance of instances) instance.close();
 });
+
+/**
+ *
+ * @param {Database} db Db instance
+ * @param {string} source Source
+ * @returns {array}
+ *
+ * Condensed from https://github.com/WiseLibs/better-sqlite3/blob/master/lib/methods/pragma.js
+ * MIT License
+ */
+const pragma = (db, source) => {
+  const stmt = db.prepare(`PRAGMA ${source}`, this, true);
+  return stmt.all();
+};
 
 /**
  * A enhanced Map structure with additional utility methods.
@@ -153,7 +167,7 @@ class Enmap extends Map {
         verbose: this.#verbose,
       });
     } else {
-      this.#db = new Database(':memory:', { verbose: this.#verbose });
+      this.#db = new Database(':memory:');
       this.#name = 'MemoryEnmap';
     }
 
@@ -928,8 +942,8 @@ class Enmap extends Map {
           `CREATE TABLE ${this.#name} (key text PRIMARY KEY, value text)`,
         )
         .run();
-      this.#db.pragma('synchronous = 1');
-      if (this.#wal) this.#db.pragma('journal_mode = wal');
+      pragma(this.#db, 'synchronous = 1');
+      if (this.#wal) pragma(this.#db, 'journal_mode = wal');
     }
     this.#db
       .prepare(

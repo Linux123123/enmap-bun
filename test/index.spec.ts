@@ -1,5 +1,7 @@
+import { expect, test, describe, beforeEach, afterEach } from 'bun:test';
+
 /* global describe, test, beforeEach, afterEach, expect */
-const Enmap = require('../');
+const Enmap = require('../src');
 
 describe('Standard Enmaps', () => {
   let enmap;
@@ -38,13 +40,24 @@ describe('Standard Enmaps', () => {
     test('supports arrays', () => {
       expect(enmap.set('array', [1, 2, 3])).not.toBe(null);
       expect(enmap.get('array').length).toBe(3);
-      expect(enmap.set('objectarray', [{ a: 1, b: 2, c: 3 }, { d: 4, e: 5, f: 6 }])).not.toBe(null);
+      expect(
+        enmap.set('objectarray', [
+          { a: 1, b: 2, c: 3 },
+          { d: 4, e: 5, f: 6 },
+        ]),
+      ).not.toBe(null);
       expect(enmap.get('objectarray').length).toBe(2);
     });
 
     test('also supports objects', () => {
-      expect(enmap.set('object', { color: 'black', action: 'paint', desire: true })).not.toBe(null);
-      expect(enmap.get('object')).toEqual({ color: 'black', action: 'paint', desire: true });
+      expect(
+        enmap.set('object', { color: 'black', action: 'paint', desire: true }),
+      ).not.toBe(null);
+      expect(enmap.get('object')).toEqual({
+        color: 'black',
+        action: 'paint',
+        desire: true,
+      });
     });
 
     test('can get an object by property name', () => {
@@ -54,7 +67,9 @@ describe('Standard Enmaps', () => {
     });
 
     test('can set subproperties of objects', () => {
-      expect(enmap.set('object', { sub1: 'a', sub2: [] }, 'sub')).not.toBe(null);
+      expect(enmap.set('object', { sub1: 'a', sub2: [] }, 'sub')).not.toBe(
+        null,
+      );
       expect(enmap.get('object', 'sub.sub1')).toBe('a');
       expect(enmap.get('object', 'sub.sub2').length).toBe(0);
     });
@@ -64,7 +79,9 @@ describe('Standard Enmaps', () => {
       expect(enmap.get('array').length).toBe(4);
       expect(enmap.remove('array', 1)).not.toBe(null);
       expect(enmap.get('array').length).toBe(3);
-      expect(enmap.remove('objectarray', (value) => value.e === 5)).not.toBe(null);
+      expect(enmap.remove('objectarray', (value) => value.e === 5)).not.toBe(
+        null,
+      );
       expect(enmap.get('objectarray').length).toBe(1);
     });
 
@@ -88,7 +105,9 @@ describe('Standard Enmaps', () => {
         date: new Date('Thu, 28 Apr 2016 22:02:17 GMT'),
         map: new Map([['hello', 'world']]),
         set: new Set([123, 456]),
-        fn: function echo(arg) { return arg; },
+        fn: function echo(arg) {
+          return arg;
+        },
         re: /([^\s]+)/g,
         // eslint-disable-next-line no-undef
         big: BigInt(10),
@@ -243,6 +262,8 @@ describe('Enmap Advanced Options', () => {
     const data = enmap.db
       .prepare(`SELECT * FROM 'MemoryEnmap' WHERE key = ?;`)
       .get('test');
-    expect(data.value).toBe('{"a":"modified","b":2,"c":3,"d":[1,2,3,4],"e":{"a":"a","b":"b","c":"c"}}');
+    expect(data.value).toBe(
+      '{"a":"modified","b":2,"c":3,"d":[1,2,3,4],"e":{"a":"a","b":"b","c":"c"}}',
+    );
   });
 });
