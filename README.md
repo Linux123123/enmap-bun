@@ -1,4 +1,5 @@
 # Enmap - Enhanced Maps
+# Fork for bun support
 
 <div align="center">
   <p>
