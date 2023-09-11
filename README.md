@@ -42,7 +42,7 @@ but since its creation has grown far beyond those methods alone.
 
 ### Q: What is "Persistent"?
 
-**A**: By using a database layer with `better-sqlite3`, any data added to the Enmap
+**A**: By using a database layer with `bun:sqlite`, any data added to the Enmap
 is stored not only in temporary memory but also backed up in a local database. This means that
 when you restart your project, your data is not lost and is loaded on startup.
 
