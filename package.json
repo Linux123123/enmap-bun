@@ -1,6 +1,6 @@
 {
   "name": "enmap-bun",
-  "version": "5.9.8-1",
+  "version": "5.9.8-2",
   "description": "A fork of enmap with bun SQLite support",
   "main": "src/index.js",
   "repository": {
