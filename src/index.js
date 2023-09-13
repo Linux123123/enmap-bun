@@ -65,7 +65,6 @@ class Enmap extends Map {
   #wal;
   #polling;
   #pollingInterval;
-  #verbose;
   #db;
   #lastSync;
   /**
@@ -102,7 +101,6 @@ class Enmap extends Map {
    * This is generally used to convert the value from a stored ID into a more complex object.
    * This function may return a value, or a promise that resolves to that value (in other words, can be an async function).
    * @param {boolean} [options.wal=false] Check out Write-Ahead Logging: https://www.sqlite.org/wal.html
-   * @param {Function} [options.verbose=(query) => null] A function to call with the direct SQL statement being ran by Enmap internally
    * @example
    * const Enmap = require("enmap");
    * // Non-persistent enmap:
@@ -140,7 +138,6 @@ class Enmap extends Map {
     this.#pollingInterval = options.pollingInterval ?? 1000;
     this.#ensureProps = options.ensureProps ?? true;
     this.#serializer = options.serializer ? options.serializer : (data) => data;
-    this.#verbose = options.verbose ? options.verbose : () => null;
     this.#deserializer = options.deserializer
       ? options.deserializer
       : (data) => data;
@@ -163,9 +160,7 @@ class Enmap extends Map {
       }
 
       const dataDir = resolve(process.cwd(), options.dataDir || 'data');
-      this.#db = new Database(`${dataDir}${sep}enmap.sqlite`, {
-        verbose: this.#verbose,
-      });
+      this.#db = new Database(`${dataDir}${sep}enmap.sqlite`);
     } else {
       this.#db = new Database(':memory:');
       this.#name = 'MemoryEnmap';
