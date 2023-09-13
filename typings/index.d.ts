@@ -1,4 +1,4 @@
-declare module 'enmap' {
+declare module 'enmap-bun' {
   export interface EnmapOptions<V, SV> {
     name?: string;
     fetchAll?: boolean;
